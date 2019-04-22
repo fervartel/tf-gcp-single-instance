@@ -9,7 +9,10 @@ module "dev-vpc" {
     source      = "../../../tf-modules/gcp-vpc"
     
     name = "tf-vpc"
-    auto_create_subnetworks = "true"
+    auto_create_subnetworks = "false"
+    vpc_cidr = "192.168.0.0/24"
+    subnet_cidr = ["192.168.1.0/26", "192.168.1.64/26"]
+    subnet_region = "us-east1"
 }
 
 module "dev-vm" {
@@ -20,22 +23,3 @@ module "dev-vm" {
     image = "debian-cloud/debian-9"
     vpc    = "${module.dev-vpc.vpc_self_link}"
 }
-
-# resource "google_compute_instance" "vm_instance" {
-#   name         = "tf-instance"
-#   machine_type = "f1-micro"
-
-#   boot_disk {
-#     initialize_params {
-#       image = "debian-cloud/debian-9"
-#     }
-#   }
-
-#   network_interface {
-#     # # A default network is created for all GCP projects
-#     # network       = "default"
-#     network = "${google_compute_network.vpc_network.self_link}"
-#     access_config = {
-#     }
-#   }
-# }
